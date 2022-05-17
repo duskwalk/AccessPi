@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>AccessPi</title>
+		
+    	<!-- Compiled and minified CSS -->
+   		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  		
+		<!-- Icons -->  
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    	<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+		
+		<!-- My script -->
+		<script !--type=text/javascript src="{{
+			url_for('static', filename='script.js') }}"></script>
+		
+		<!-- CSS -->
+		<style>
+			
+			#regular{
+				background-color:#ff8f00;
+			}
+
+			#tor{
+				background-color:#4527a0;
+			}
+
+			#restart{
+				background-color: #1e88e5;
+			}
+
+			#reboot{
+				background-color: #e53935;
+			}
+
+			#submit{
+				background-color: #43a047;
+			}
+
+			#nav, #foot, #input{
+				background-color: #546e7a;
+			}
+			
+			#guide{
+				padding-right: 20px;
+			}
+
+			#title{
+				padding-left: 20px;
+			}
+
+		</style>
+	</head>
+	<body onload="settings(); status();">
+
+		<!-- Navbar -->
+		<nav>
+			<div id="nav" class="nav-wrapper">
+				<a id="title" href="/" class="brand-logo">AccessPi</a>
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="https://ipchicken.com" target="_blank">IPChicken</a></li>
+					<li><a href="https://duckduckgo.com"target="_blank">DuckDuckGo</a></li>
+					<li><a href="http://zqktlwi4fecvo6ri.onion" target="_blank">Hidden Wiki</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="container center">
+			
+			<!-- Current settings -->
+			<h3>Current settings</h3>
+			<div class="row">
+				<form class="col s6 offset-s3">
+			  		<div class="row">
+						<div class="input-field col s6">
+				  			<i class="material-icons prefix">wifi</i>
+				  			<input disabled id="text_ssid" type="text" class="validate">
+				  			<label for="text_ssid">Current SSID</label>
+						</div>
+						<div class="input-field col s6">
+				  			<i class="material-icons prefix">lock</i>
+				  			<input disabled id="text_pass" type="text" class="validate">
+				  			<label for="text_pass">Current password</label>
+						</div>
+					</div>
+				</form>
+			</div>
+			<br>
+
+			<!-- Modify settings -->
+			<h3>Modify settings</h3>
+			<div class="row">
+				<form class="col s6 offset-s3">
+					
+					<!-- New SSID -->
+					<div class="row">
+						<div class="input-field col s6">
+							<i class="material-icons prefix">wifi</i>
+							<input id="new_ssid" type="text" class="validate">
+							<label for="new_ssid">New SSID</label>
+						</div>
+					
+						<!-- New password -->
+					  	<div class="input-field col s6">
+							<i class="material-icons prefix">lock</i>
+							<input id="new_pass" type="text" class="validate">
+							<label for="new_pass">New password</label>
+					  	</div>
+					  	<div class="input-field col s6">
+							<i class="material-icons prefix">lock</i>
+							<input id="repeat_pass" type="text" class="validate">
+							<label for="repeat_pass">Repeat password</label>
+						</div>
+						<div class="col s6">
+							<a id="submit" class="waves-effect waves-light btn-large" onclick="update()"><i class="material-icons right">send</i>Submit</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		
+			<!-- Functions -->
+			<h3>Functions</h3>
+			<a id="regular" class="waves-effect waves-light btn" href="/cmd/switch_to_regular"><i class="material-icons right">network_wifi</i>Regular mode</a>
+			<a id="tor" class="waves-effect waves-light btn" href="/cmd/switch_to_tor"><i class="material-icons right">wifi_lock</i>Tor mode</a>
+			<br>
+			<br>
+			<div class="container">
+				<div class="row">
+					<div class="input-field col s6 offset-s3 container">
+						<i class="material-icons prefix">feedback</i>
+						<input disabled id="status" type="text" class="validate">
+					</div>
+				</div>
+			</div>
+			<!-- Troubleshooting -->
+			<h3>Troubleshooting</h3>
+			<a id="restart" class="waves-effect waves-light btn" href="/cmd/restart_services"><i class="material-icons right">sync</i>Restart services</a>
+			<a id="reboot" class="waves-effect waves-light btn" href="/cmd/reboot_pi"><i class="material-icons right">power_settings_new</i>Reboot Raspbian</a>
+		</div>	
+		
+		<!-- Guide button -->
+		<div id="guide">
+			<a href="guide" class="btn-floating btn-large waves-effect waves-light grey darken-3 right pulse"><i class="material-icons">subject</i></a>
+		</div>
+
+		<br>
+		<br>
+		<br>
+
+		<!-- Footer -->
+		<footer id="foot" class="page-footer">
+			<div class="container">
+			  	<div class="row">
+					<div class="col l6 s12">
+				  		<h5 class="white-text">AccessPi</h5>
+						<p class="grey-text text-lighten-4">A 2 functions access point for your home.</p>
+						<div class="chip">
+							<img src="{{url_for('static', filename='lion.jpg')}}">
+							Filippo Zeni
+						</div>
+					</div>
+					<div class="col l4 offset-l2 s12">
+				  		<h5 class="white-text">Links</h5>
+				  		<ul>
+							<li><a class="grey-text text-lighten-3" href="https://www.raspberrypi.org" target="_blank">Raspberry Pi</a></li>
+							<li><a class="grey-text text-lighten-3" href="https://materializecss.com" target="_blank">Materialize CSS</a></li>
+						</ul>
+					</div>
+			  	</div>
+			</div>
+			<div class="footer-copyright">
+			  <div class="container">
+			  © 2018 AccessPi
+			  <!-- <a class="grey-text text-lighten-4 right" href="#!">More Links</a> -->
+			  </div>
+			</div>
+		  </footer>
+	</body>
+</html>
